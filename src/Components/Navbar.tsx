@@ -3,7 +3,6 @@ import {
   FaCarrot,
   FaDrumstickBite,
   FaAppleAlt,
-  FaCheese,
   FaGlassWhiskey,
   FaShoppingCart,
   FaSearch,
