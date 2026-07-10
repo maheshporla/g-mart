@@ -1,7 +1,7 @@
-import { useState } from "react";
-import Navbar from "./Components/Navbar";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
+import Navbar from "./Components/Navbar";
 import Home from "./Home";
 import Veg from "./Veg";
 import Fruits from "./Fruits";
@@ -12,13 +12,35 @@ import Cart from "./Cart";
 import Checkout from "./Checkout";
 import Footer from "./Footer";
 
+interface CartItem {
+  name: string;
+  price: number;
+  image: string;
+  quantity: number;
+}
+
 function App() {
   const [page, setPage] = useState("home");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [cartItems, setCartItems] = useState<any[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    return JSON.parse(
+      localStorage.getItem("cart") || "[]"
+    );
+  });
 
-  const addToCart = (item: any) => {
+  useEffect(() => {
+    localStorage.setItem(
+      "cart",
+      JSON.stringify(cartItems)
+    );
+  }, [cartItems]);
+
+  const addToCart = (item: {
+    name: string;
+    price: number;
+    image: string;
+  }) => {
     setCartItems((prev) => {
       const existing = prev.find(
         (cartItem) => cartItem.name === item.name
@@ -35,10 +57,18 @@ function App() {
         );
       }
 
-      return [...prev, { ...item, quantity: 1 }];
+      return [
+        ...prev,
+        {
+          ...item,
+          quantity: 1,
+        },
+      ];
     });
 
-    toast.success(`${item.name} added to cart 🛒`);
+    toast.success(
+      `${item.name} added to cart 🛒`
+    );
   };
 
   const totalAmount = cartItems.reduce(
@@ -53,6 +83,7 @@ function App() {
         setPage={setPage}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
+        cartItems={cartItems}
       />
 
       <main className="pt-24 px-4 flex-grow">
@@ -104,11 +135,12 @@ function App() {
         )}
 
         {page === "checkout" && (
-          <Checkout
-            setPage={setPage}
-            cartItems={cartItems}
-            totalAmount={totalAmount}
-          />
+         <Checkout
+        setPage={setPage}
+        cartItems={cartItems}
+        totalAmount={totalAmount}
+        setCartItems={setCartItems}
+         />
         )}
       </main>
 

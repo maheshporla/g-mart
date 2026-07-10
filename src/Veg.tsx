@@ -31,13 +31,7 @@ const vegetables = [
     oldPrice: 30,
     newPrice: 25,
   },
-  {
-    image: drumstick,
-    name: "Drumstick",
-    description: "Nutrient-rich greens",
-    oldPrice: 20,
-    newPrice: 15,
-  },
+  
   {
     image: tomato,
     name: "Tomato",
@@ -58,6 +52,13 @@ const vegetables = [
     description: "Tender and delicious",
     oldPrice: 22,
     newPrice: 18,
+  },
+  {
+    image: drumstick,
+    name: "Drumstick",
+    description: "Nutrient-rich greens",
+    oldPrice: 20,
+    newPrice: 15,
   },
   {
     image: onion,

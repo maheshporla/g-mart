@@ -6,6 +6,7 @@ import {
   FaGlassWhiskey,
   FaShoppingCart,
   FaSearch,
+  FaUserCircle,
 } from "react-icons/fa";
 import { GiMilkCarton } from "react-icons/gi";
 
@@ -13,98 +14,90 @@ interface NavbarProps {
   setPage: (page: string) => void;
   searchTerm: string;
   setSearchTerm: (value: string) => void;
+  cartItems: {
+    quantity: number;
+  }[];
 }
 
 function Navbar({
   setPage,
   searchTerm,
   setSearchTerm,
+  cartItems,
 }: NavbarProps) {
+  const totalItems = cartItems.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
+
   return (
     <nav
-      style={{
-        background: "linear-gradient(to right, #16a34a, #22c55e, #84cc16)",
-        padding: "15px 25px",
-        boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-      }}
+      className="
+      fixed top-0 left-0 w-full z-50
+      bg-gradient-to-r
+      from-green-600
+      via-green-500
+      to-lime-500
+      backdrop-blur-md
+      shadow-xl
+      "
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
+      <div className="flex items-center px-6 py-4">
         {/* Logo */}
         <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-          }}
+          className="flex items-center gap-3 cursor-pointer"
+          onClick={() => setPage("home")}
         >
-          <FaShoppingCart color="white" size={30} />
-          <h1
-            style={{
-              color: "white",
-              margin: 0,
-              fontSize: "30px",
-            }}
-          >
+          <FaShoppingCart
+            className="text-white"
+            size={32}
+          />
+
+          <h1 className="text-white text-4xl font-bold">
             G-Mart
           </h1>
         </div>
 
         {/* Search Bar */}
-        <div
-          style={{
-            marginLeft: "30px",
-            position: "relative",
-          }}
-        >
+        <div className="ml-8 relative">
           <FaSearch
-            style={{
-              position: "absolute",
-              left: "12px",
-              top: "12px",
-              color: "gray",
-            }}
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
           />
 
           <input
             type="text"
             placeholder="Search Products..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{
-              width: "300px",
-              padding: "10px 15px 10px 40px",
-              borderRadius: "25px",
-              border: "none",
-              outline: "none",
-            }}
+            onChange={(e) =>
+              setSearchTerm(e.target.value)
+            }
+            className="
+            w-80
+            pl-12
+            pr-4
+            py-3
+            rounded-full
+            outline-none
+            shadow-md
+            border-2 border-transparent
+            focus:border-green-500
+            "
           />
         </div>
 
-        {/* Navigation Buttons */}
-        <div
-          style={{
-            marginLeft: "auto",
-            display: "flex",
-            gap: "10px",
-            flexWrap: "wrap",
-          }}
-        >
+        {/* Navigation */}
+        <div className="ml-auto flex items-center gap-3 flex-wrap">
           <button
-              onClick={() => setPage("home")}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-600 text-white"
-            >
-              <FaHome />
-              Home
-            </button>
+            onClick={() => setPage("home")}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black shadow-md hover:scale-105 transition-all duration-300"
+          >
+            <FaHome />
+            Home
+          </button>
 
           <button
             onClick={() => setPage("veg")}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 text-white"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black shadow-md hover:scale-105 transition-all duration-300"
           >
             <FaCarrot />
             Veg
@@ -112,23 +105,23 @@ function Navbar({
 
           <button
             onClick={() => setPage("nonveg")}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500 text-white"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black shadow-md hover:scale-105 transition-all duration-300"
           >
             <FaDrumstickBite />
             Non-Veg
           </button>
 
           <button
-              onClick={() => setPage("fruits")}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500 text-white"
-            >
-              <FaAppleAlt />
-              Fruits
-            </button>
+            onClick={() => setPage("fruits")}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black shadow-md hover:scale-105 transition-all duration-300"
+          >
+            <FaAppleAlt />
+            Fruits
+          </button>
 
           <button
             onClick={() => setPage("dairy")}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 text-white"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black shadow-md hover:scale-105 transition-all duration-300"
           >
             <GiMilkCarton />
             Dairy
@@ -136,18 +129,44 @@ function Navbar({
 
           <button
             onClick={() => setPage("drinks")}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500 text-white"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black shadow-md hover:scale-105 transition-all duration-300"
           >
             <FaGlassWhiskey />
             Drinks
           </button>
 
-         <button
-            onClick={() => setPage("cart")}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-teal-500 text-white"
-          >
-            <FaShoppingCart />
+         
+
+          {/* Cart */}
+          <div className="relative">
+            <button
+              onClick={() => setPage("cart")}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black shadow-md hover:bg-gray-100 hover:scale-105 transition-all duration-300"
+            >
+              <FaShoppingCart />
               Cart
+            </button>
+
+            <span
+              className="
+              absolute -top-2 -right-2
+              bg-red-600 text-white
+              w-6 h-6
+              rounded-full
+              flex items-center justify-center
+              text-xs font-bold
+              shadow-lg
+              "
+            >
+              {totalItems}
+            </span>
+          </div>
+              {/* Profile */}
+          <button
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black shadow-md hover:scale-105 transition-all duration-300"
+          >
+            <FaUserCircle size={22} />
+            
           </button>
         </div>
       </div>
